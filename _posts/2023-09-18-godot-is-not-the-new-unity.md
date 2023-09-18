@@ -588,7 +588,7 @@ If Godot wants to be able to capture the general Unity market (I don't actually 
 
 
 ## Acknowledgements
- * \_Mario\_Boss on reddit for being the first to bring my attention to the `RaycastNode2D` trick.
+ * \_Mario\_Boss on reddit for being the first to bring my attention to the `Raycast2D` trick.
  * John Riccitiello, for finally giving me a reason to do more research on other engines.
  * Mike Bithell, for letting me steal his foreshadowing joke. I didn't actually ask permission, but he seems too nice to find me and hit me.
  * Freya Holmér, because nothing has kept me more entertained while writing this than seeing her complaining about Unreal doing physics in centimetres, and waiting until the moment she shares my horror upon discovering Godot has units like `kg pixels^2`.
