@@ -569,7 +569,9 @@ Unfortunately, duplicating the entire API with better versions like this would c
 ### What if we tear it all down and start again?
 This option obviously has a lot of short term pain. Godot 4.0 has only recently happened, and now I'm talking about a backcompat breaking complete API redux like a Godot 5.0. However, if I'm honest with myself, I see this as the only viable path to the engine being in a good place in three years time. Mixing fast and slow APIs as discussed above would leave us with headaches for decades - a trap I expect the engine will probably fall into.
 
-In my opinion, if Godot were to go down this route, GDScript should probably be dropped entirely. I don't really see the point of it when C# exists, and supporting it causes so much hassle. I'm clearly completely at odds with the lead Godot devs and the project philosophy on this point, so I have no expectation that this will happen. Who knows though - Unity eventually dropped UnityScript for full C#, maybe Godot will one day take the same step. Foreshadowing?
+~~In my opinion, if Godot were to go down this route, GDScript should probably be dropped entirely. I don't really see the point of it when C# exists, and supporting it causes so much hassle. I'm clearly completely at odds with the lead Godot devs and the project philosophy on this point, so I have no expectation that this will happen. Who knows though - Unity eventually dropped UnityScript for full C#, maybe Godot will one day take the same step. Foreshadowing?~~
+
+Edit: I'm taking the above out for now. I don't personally care about GDScript, but other people do and I don't want to take it away from them. I have no objection to C# and GDScript sitting beside each other with different APIs each optimised for the respective language's needs.
 
 ## Was the title of this article melodramatic clickbait?
 Maybe a little. Not a lot.
