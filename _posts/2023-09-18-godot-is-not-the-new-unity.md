@@ -585,6 +585,10 @@ For many others, it's important to know that they can do these things if they ne
 If Godot wants to be able to capture the general Unity market (I don't actually know that it does want that) it will need to make some rapid and fundamental changes. Many of the things discussed in this article will simply not be acceptable to Unity devs. 
 
 
+## Discussion
+I [posted this article on the r/Godot subreddit](https://old.reddit.com/r/godot/comments/16lti15/godot_is_not_the_new_unity_the_anatomy_of_a_godot/) and there's quite an active discussion there. If you've arrived here from somewhere else and would like to give feedback or be pseudonymously rude to me on the internet, that's the place to do it. 
+
+
 ## Acknowledgements
  * \_Mario\_Boss on reddit for being the first to bring my attention to the `Raycast2D` node trick.
  * John Riccitiello, for finally giving me a reason to do more research on other engines.
