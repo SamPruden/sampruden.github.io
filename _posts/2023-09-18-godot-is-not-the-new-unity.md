@@ -15,7 +15,6 @@ I started [a controversial but productive discussion](https://reddit.com/r/godot
 We're going to take a deep dive into how Godot achieves the equivalent of Unity's `Physics2D.Raycast`, and what happens under the hood when we use it. To make this a little more concrete, let's start by implementing a trivial function in Unity.
 
 ### Unity
-
 ```csharp
 // Simple raycast in Unity
 bool GetRaycastDistanceAndNormal(Vector2 origin, Vector2 direction, out float distance, out Vector2 normal) {
@@ -55,7 +54,6 @@ private static extern void Raycast_Internal_Injected(
 Okay, so it does a tiny amount of work and efficiently shunts the call off to the unmanaged engine core via the extern mechanism. That makes sense, I'm sure Godot will do something similar. Foreshadowing.
 
 ### Godot
-
 Let's do the same thing in Godot, [exactly as the tutorial recommends](https://docs.godotengine.org/en/stable/tutorials/physics/ray-casting.html#raycast-query).
 
 ```csharp
@@ -335,9 +333,7 @@ If we hit something, for each field we want to read we:
 Well that's a lot work for returning a 44 byte struct and reading a couple of fields.
 
 ### Can we do better?
-
 #### Caching query parameters
-
 If you can remember as far back as `PhysicsRayQueryParameters2D`, we had the opportunity to avoid some allocations by caching, so let's do that quickly.
 
 ```csharp
@@ -512,6 +508,7 @@ At the lower end, those numbers are actually very limiting. My current project n
 We also can't forget about the garbage creating allocations that happen in C#. I usually write games with a zero garbage per frame policy.
 
 *Just for fun, I also benchmarked Unity. It does a full useful raycast, with parameter setting and result retrieval, in about 0.52ns. Before Godot's binding overhead, the core physics engines have comparable speed.*
+
 ## Have I cherrypicked?
 When I posted the reddit thread, a number of people said that the physics API is uniquely bad and that it isn't representative of the whole engine. I certainly didn't intentionally cherrypick it - it just so happens that raycasting was the very first thing I attempted when checking out Godot. However, perhaps I'm being a little unfair, so let's examine that.
 
@@ -550,7 +547,6 @@ This way of handling binding via function pointers also leads to significant ove
 **Godot has made a philosophical decision to be slow.** The only practical way to interact with the engine is via this binding layer, and its core design prevents it from ever being fast. No amount of optimising the implementation of `Dictionary` or speeding up the physics engine is going to get around the fact we're passing large heap allocated values around when we should be dealing with tiny structs. While C# and GDScript APIs remain synchronised, this will always hold the engine back.
 
 ## Okay, let's fix it then!
-
 ### What can we do without deviating from the existing binding layer?
 If we assume that we still need to keep all of our APIs GDScript compatible, there are a few areas where we can probably improve things, although it won't be pretty. Let's go back to our `IntsersectRay` example.
 
