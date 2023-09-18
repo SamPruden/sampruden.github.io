@@ -486,7 +486,7 @@ As we've seen above, `RayCast2D.ForceRaycastUpdate()` is pretty close to a minim
 
 Our setup is a simple scene containing a single circle collider that our ray always hits. We're interested in measuring binding overhead, not the performance of the physics engine itself. We're dealing with timings for individual rays measured in nanoseconds, so these numbers may look inconsequentially small. To better illustrate their significance, I also report "calls per frame" giving the number of times the functions could be called in in a single frame at 60fps and 120fps if the game did nothing but trivial raycasts.
 
-| Method | Time (ns) | Baseline multiple | Per frame (60fps) | Per frame (120fps) | GC alloc (bytes) |
+| Method | Time (μs) | Baseline multiple | Per frame (60fps) | Per frame (120fps) | GC alloc (bytes) |
 | --- | --- | --- | --- | --- | --- |
 | `ForceRaycastUpdate` (raw engine speed, not useful) | 0.49 | 1.00 | 34,000 | 17,000 | 0 |
 | `GetRaycastDistanceAndNormalWithNode` | 0.97 | 1.98 | 17,200 | 8,600 | 0 |
@@ -507,7 +507,7 @@ At the lower end, those numbers are actually very limiting. My current project n
 
 We also can't forget about the garbage creating allocations that happen in C#. I usually write games with a zero garbage per frame policy.
 
-*Just for fun, I also benchmarked Unity. It does a full useful raycast, with parameter setting and result retrieval, in about 0.52ns. Before Godot's binding overhead, the core physics engines have comparable speed.*
+*Just for fun, I also benchmarked Unity. It does a full useful raycast, with parameter setting and result retrieval, in about 0.52μs. Before Godot's binding overhead, the core physics engines have comparable speed.*
 
 ## Have I cherrypicked?
 When I posted the reddit thread, a number of people said that the physics API is uniquely bad and that it isn't representative of the whole engine. I certainly didn't intentionally cherrypick it - it just so happens that raycasting was the very first thing I attempted when checking out Godot. However, perhaps I'm being a little unfair, so let's examine that.
@@ -594,3 +594,4 @@ I [posted this article on the r/Godot subreddit](https://old.reddit.com/r/godot/
  * John Riccitiello, for finally giving me a reason to do more research on other engines.
  * Mike Bithell, for letting me steal his foreshadowing joke. I didn't actually ask permission, but he seems too nice to find me and hit me.
  * Freya Holmér, because nothing has kept me more entertained while writing this than seeing her complaining about Unreal doing physics in centimetres, and waiting until the moment she shares my horror upon discovering Godot has units like `kg pixels^2`.
+ * Clainkey on reddit for pointing out that I mistakenly had nanoseconds where I should have had microseconds.
