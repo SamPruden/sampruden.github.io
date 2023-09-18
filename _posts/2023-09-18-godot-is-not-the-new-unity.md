@@ -521,7 +521,7 @@ If we scan the whole Godot API (via C# reflection) we luckily find that there ar
 
 However, in my experience, very few engine APIs get as much use as physics. If I look at the engine API calls in my gameplay code, they're probably 80% physics and transforms.
 
-Let's also remember that `Dictionary` is only part of the problem. If we look a little wider for things returning `Godot.Collections.Array<T>` (remember: heap allocated, contents as `Variant`) we find lots from physics, to mesh & geometry manipulation, to navigation, to tilemaps, to rendering.
+Let's also remember that `Dictionary` is only part of the problem. If we look a little wider for things returning `Godot.Collections.Array<T>` (remember: heap allocated, contents as `Variant`) we find lots from physics, mesh & geometry manipulation, navigation, tilemaps, rendering, and more.
 
 Physics may be a particularly bad (but essential) area of the API, but the heap allocated type problems, as well as the general slowness of the pointer chasing, are deeply rooted throughout.
 
