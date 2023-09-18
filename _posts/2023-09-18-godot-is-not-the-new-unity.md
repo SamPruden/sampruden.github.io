@@ -593,5 +593,5 @@ I [posted this article on the r/Godot subreddit](https://old.reddit.com/r/godot/
  * \_Mario\_Boss on reddit for being the first to bring my attention to the `Raycast2D` node trick.
  * John Riccitiello, for finally giving me a reason to do more research on other engines.
  * Mike Bithell, for letting me steal his foreshadowing joke. I didn't actually ask permission, but he seems too nice to find me and hit me.
- * Freya Holmér, because nothing has kept me more entertained while writing this than seeing her complaining about Unreal doing physics in centimetres, and waiting until the moment she shares my horror upon discovering Godot has units like `kg pixels^2`. Edit: [One of my jokes finally landed.](https://twitter.com/FreyaHolmer/status/1703884185004380338)!
+ * Freya Holmér, because nothing has kept me more entertained while writing this than seeing her complaining about Unreal doing physics in centimetres, and waiting until the moment she shares my horror upon discovering Godot has units like `kg pixels^2`. Edit: [One of my jokes finally landed.](https://twitter.com/FreyaHolmer/status/1703884185004380338)
  * Clainkey on reddit for pointing out that I mistakenly had nanoseconds where I should have had microseconds.
