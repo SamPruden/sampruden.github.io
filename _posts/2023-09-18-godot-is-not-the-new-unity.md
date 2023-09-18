@@ -334,7 +334,7 @@ If we hit something, for each field we want to read we:
 
 Well that's a lot work for returning a 44 byte struct and reading a couple of fields.
 
-## Can we do better?
+### Can we do better?
 
 #### Caching query parameters
 
