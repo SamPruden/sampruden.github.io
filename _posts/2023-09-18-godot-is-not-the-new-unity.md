@@ -573,7 +573,7 @@ Unfortunately, duplicating the entire API with better versions like this would c
 ### What if we tear it all down and start again?
 This option obviously has a lot of short term pain. Godot 4.0 has only recently happened, and now I'm talking about a backcompat breaking complete API redux like a Godot 5.0. However, if I'm honest with myself, I see this as the only viable path to the engine being in a good place in three years time. Mixing fast and slow APIs as discussed above would leave us with headaches for decades - a trap I expect the engine will probably fall into.
 
-In my opinion, if Godot were to go down this route, GDScript should probably be dropped entirely. I don't really see the point of it when C# exists, and supporting it causes so much hassle. I'm clearly completely at odds with the lead Godot devs and the project philosophy on this point, so I have no expectation that this will happen. Who knows though - Unity eventually dropped UnityScript for full C#, maybe Godot will one day take the same step.
+In my opinion, if Godot were to go down this route, GDScript should probably be dropped entirely. I don't really see the point of it when C# exists, and supporting it causes so much hassle. I'm clearly completely at odds with the lead Godot devs and the project philosophy on this point, so I have no expectation that this will happen. Who knows though - Unity eventually dropped UnityScript for full C#, maybe Godot will one day take the same step. Foreshadowing?
 
 ## Was the title of this article melodramatic clickbait?
 Maybe a little. Not a lot.
@@ -588,7 +588,7 @@ If Godot wants to be able to capture the general Unity market (I don't actually 
 
 
 ## Acknowledgements
- * \_Mario\_Boss on reddit for being the first to bring my attention to the `Raycast2D` trick.
+ * \_Mario\_Boss on reddit for being the first to bring my attention to the `Raycast2D` node trick.
  * John Riccitiello, for finally giving me a reason to do more research on other engines.
  * Mike Bithell, for letting me steal his foreshadowing joke. I didn't actually ask permission, but he seems too nice to find me and hit me.
  * Freya Holmér, because nothing has kept me more entertained while writing this than seeing her complaining about Unreal doing physics in centimetres, and waiting until the moment she shares my horror upon discovering Godot has units like `kg pixels^2`.
