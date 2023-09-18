@@ -3,7 +3,7 @@ layout: post
 title: "Godot is not the new Unity - The anatomy of a Godot API call"
 ---
 
-Like many people, I have spent the last few days looking for the new Unity. Godot has some potential, especially if it can take advantage of an influx of dev talent to drive rapid improvement. Open source is cool like that. However, one major issue holds it back - the binding layer between engine code and gameplay code is structurally built to be slow in ways which are very hard to fix without tearing everything down and rebuilding the entire API from scratch.
+Like many people, I've spent the last few days looking for the new Unity. Godot has some potential, especially if it can take advantage of an influx of dev talent to drive rapid improvement. Open source is cool like that. However, one major issue holds it back - the binding layer between engine code and gameplay code is structurally built to be slow in ways which are very hard to fix without tearing everything down and rebuilding the entire API from scratch.
 
 Godot has been used to create some successful games, so clearly this isn't always a blocker. However Unity has spent the last five years working on speeding up their scripting with crazy projects such as building two custom compilers, SIMD maths libraries, custom collections and allocators, and of course the giant (and very much unfinished) ECS project. It's been their CTO's primary focus since 2018. Clearly Unity believed that scripting performance mattered to a significant part of their userbase. Switching to Godot isn't only like going back five years in Unity - it's so much worse.
 
