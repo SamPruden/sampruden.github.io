@@ -19,10 +19,10 @@ We're going to take a deep dive into how Godot achieves the equivalent of Unity'
 ```csharp
 // Simple raycast in Unity
 bool GetRaycastDistanceAndNormal(Vector2 origin, Vector2 direction, out float distance, out Vector2 normal) {
-	RaycastHit2D hit = Physics2D.Raycast(origin, direction);
-	distance = hit.distance;
-	normal = hit.normal;
-	return (bool)hit;
+    RaycastHit2D hit = Physics2D.Raycast(origin, direction);
+    distance = hit.distance;
+    normal = hit.normal;
+    return (bool)hit;
 }
 ```
 
@@ -34,22 +34,22 @@ public static RaycastHit2D Raycast(Vector2 origin, Vector2 direction)
 
 public RaycastHit2D Raycast(Vector2 origin, Vector2 direction, float distance, [DefaultValue("Physics2D.DefaultRaycastLayers")] int layerMask = -5)
 {
-	ContactFilter2D contactFilter = ContactFilter2D.CreateLegacyFilter(layerMask, float.NegativeInfinity, float.PositiveInfinity);
-	return Raycast_Internal(this, origin, direction, distance, contactFilter);
+    ContactFilter2D contactFilter = ContactFilter2D.CreateLegacyFilter(layerMask, float.NegativeInfinity, float.PositiveInfinity);
+    return Raycast_Internal(this, origin, direction, distance, contactFilter);
 }
 
 [NativeMethod("Raycast_Binding")]
 [StaticAccessor("PhysicsQuery2D", StaticAccessorType.DoubleColon)]
 private static RaycastHit2D Raycast_Internal(PhysicsScene2D physicsScene, Vector2 origin, Vector2 direction, float distance, ContactFilter2D contactFilter)
 {
-	Raycast_Internal_Injected(ref physicsScene, ref origin, ref direction, distance, ref contactFilter, out var ret);
-	return ret;
+    Raycast_Internal_Injected(ref physicsScene, ref origin, ref direction, distance, ref contactFilter, out var ret);
+    return ret;
 }
 
 [MethodImpl(MethodImplOptions.InternalCall)]
 private static extern void Raycast_Internal_Injected(
-	ref PhysicsScene2D physicsScene, ref Vector2 origin, ref Vector2 direction, float distance,
-	ref ContactFilter2D contactFilter, out RaycastHit2D ret);
+    ref PhysicsScene2D physicsScene, ref Vector2 origin, ref Vector2 direction, float distance,
+    ref ContactFilter2D contactFilter, out RaycastHit2D ret);
 ```
 
 Okay, so it does a tiny amount of work and efficiently shunts the call off to the unmanaged engine core via the extern mechanism. That makes sense, I'm sure Godot will do something similar. Foreshadowing.
@@ -68,20 +68,20 @@ bool GetRaycastDistanceAndNormal(Vector2 origin, Vector2 direction, out float di
     Godot.Collections.Dictionary hitDictionary = spaceState.IntersectRay(queryParams);
 
     if (hitDictionary.Count != 0)
-	{
-		Variant hitPositionVariant = hitDictionary[(Variant)"position"];
-		Vector2 hitPosition = (Vector2)hitPositionVariant;
-		Variant hitNormalVariant = hitDictionary[(Variant)"normal"];
-		Vector2 hitNormal = (Vector2)hitNormalVariant;
-		
-		distance = (hitPosition - origin).Length();
-		normal = hitNormal;
-		return true;
-	}
+    {
+        Variant hitPositionVariant = hitDictionary[(Variant)"position"];
+        Vector2 hitPosition = (Vector2)hitPositionVariant;
+        Variant hitNormalVariant = hitDictionary[(Variant)"normal"];
+        Vector2 hitNormal = (Vector2)hitNormalVariant;
+        
+        distance = (hitPosition - origin).Length();
+        normal = hitNormal;
+        return true;
+    }
 
-	distance = default;
-	normal = default;
-	return false;
+    distance = default;
+    normal = default;
+    return false;
 }
 ```
 
@@ -95,44 +95,44 @@ If we look inside these API calls we'll see that even ostensibly simple ones lik
 // This is the function we're diving into.
 public World2D GetWorld2D()
 {
-	// MethodBind64 is a pointer to the function we're calling in C++.
-	// MethodBind64 is stored in a static variable, so we have to do a memory lookup to retrieve it.
-	return (World2D)NativeCalls.godot_icall_0_51(MethodBind64, GodotObject.GetPtr(this));
+    // MethodBind64 is a pointer to the function we're calling in C++.
+    // MethodBind64 is stored in a static variable, so we have to do a memory lookup to retrieve it.
+    return (World2D)NativeCalls.godot_icall_0_51(MethodBind64, GodotObject.GetPtr(this));
 }
 
 // We call into these functions which mediate API calls.
 internal unsafe static GodotObject godot_icall_0_51(IntPtr method, IntPtr ptr)
 {
-	godot_ref godot_ref = default(godot_ref);
+    godot_ref godot_ref = default(godot_ref);
 
-	// The try/finally machinery is not free. This introduces a state machine.
-	// It can also block JIT optimisations.
-	try
-	{
-		// Validation check, even though everything here is internal and should be trusted.
-		if (ptr == IntPtr.Zero) throw new ArgumentNullException("ptr");
+    // The try/finally machinery is not free. This introduces a state machine.
+    // It can also block JIT optimisations.
+    try
+    {
+        // Validation check, even though everything here is internal and should be trusted.
+        if (ptr == IntPtr.Zero) throw new ArgumentNullException("ptr");
 
-		// This calls into another function which performs the actual function pointer call
-		// and puts the unmanaged result in godot_ref via a pointer.
-		NativeFuncs.godotsharp_method_bind_ptrcall(method, ptr, null, &godot_ref);
-		
-		// This is some machinery for moving references to managed objects over the C#/C++ boundary.
-		return InteropUtils.UnmanagedGetManaged(godot_ref.Reference);
-	}
-	finally
-	{
-		godot_ref.Dispose();
-	}
+        // This calls into another function which performs the actual function pointer call
+        // and puts the unmanaged result in godot_ref via a pointer.
+        NativeFuncs.godotsharp_method_bind_ptrcall(method, ptr, null, &godot_ref);
+        
+        // This is some machinery for moving references to managed objects over the C#/C++ boundary.
+        return InteropUtils.UnmanagedGetManaged(godot_ref.Reference);
+    }
+    finally
+    {
+        godot_ref.Dispose();
+    }
 }
 
 // The function which actually calls the function pointer.
 [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 public static partial void godotsharp_method_bind_ptrcall( global::System.IntPtr p_method_bind,  global::System.IntPtr p_instance,  void** p_args,  void* p_ret)
 {
-	// But wait! 
-	// _unmanagedCallbacks.godotsharp_method_bind_ptrcall is actually another
-	// static variable access to retrieve another function pointer.
-	_unmanagedCallbacks.godotsharp_method_bind_ptrcall(p_method_bind, p_instance, p_args, p_ret);
+    // But wait! 
+    // _unmanagedCallbacks.godotsharp_method_bind_ptrcall is actually another
+    // static variable access to retrieve another function pointer.
+    _unmanagedCallbacks.godotsharp_method_bind_ptrcall(p_method_bind, p_instance, p_args, p_ret);
 }
 
 // To be honest, I haven't studied this well enough to know exactly what's happening here.
@@ -142,20 +142,20 @@ public static partial void godotsharp_method_bind_ptrcall( global::System.IntPtr
 // Fortunately, this doesn't appear to do any allocations. Foreshadowing.
 public static GodotObject UnmanagedGetManaged(IntPtr unmanaged)
 {
-	if (unmanaged == IntPtr.Zero) return null;
+    if (unmanaged == IntPtr.Zero) return null;
 
-	IntPtr intPtr = NativeFuncs.godotsharp_internal_unmanaged_get_script_instance_managed(unmanaged, out var r_has_cs_script_instance);
-	if (intPtr != IntPtr.Zero) return (GodotObject)GCHandle.FromIntPtr(intPtr).Target;
-	if (r_has_cs_script_instance.ToBool()) return null;
+    IntPtr intPtr = NativeFuncs.godotsharp_internal_unmanaged_get_script_instance_managed(unmanaged, out var r_has_cs_script_instance);
+    if (intPtr != IntPtr.Zero) return (GodotObject)GCHandle.FromIntPtr(intPtr).Target;
+    if (r_has_cs_script_instance.ToBool()) return null;
 
-	intPtr = NativeFuncs.godotsharp_internal_unmanaged_get_instance_binding_managed(unmanaged);
-	object obj = ((intPtr != IntPtr.Zero) ? GCHandle.FromIntPtr(intPtr).Target : null);
-	if (obj != null) return (GodotObject)obj;
+    intPtr = NativeFuncs.godotsharp_internal_unmanaged_get_instance_binding_managed(unmanaged);
+    object obj = ((intPtr != IntPtr.Zero) ? GCHandle.FromIntPtr(intPtr).Target : null);
+    if (obj != null) return (GodotObject)obj;
 
-	intPtr = NativeFuncs.godotsharp_internal_unmanaged_instance_binding_create_managed(unmanaged, intPtr);
-	if (!(intPtr != IntPtr.Zero)) return null;
+    intPtr = NativeFuncs.godotsharp_internal_unmanaged_instance_binding_create_managed(unmanaged, intPtr);
+    if (!(intPtr != IntPtr.Zero)) return null;
 
-	return (GodotObject)GCHandle.FromIntPtr(intPtr).Target;
+    return (GodotObject)GCHandle.FromIntPtr(intPtr).Target;
 }
 ```
 
@@ -180,12 +180,12 @@ What's the big deal, that's just a little struct packing some raycast parameters
 //     var collision = get_world_2d().direct_space_state.intersect_ray(query)
 public unsafe static PhysicsRayQueryParameters2D Create(Vector2 from, Vector2 to, uint collisionMask = uint.MaxValue, Array<Rid> exclude = null)
 {
-	// Yes, this goes through all of the same machinery discussed above.
-	return (PhysicsRayQueryParameters2D)NativeCalls.godot_icall_4_731(
-		MethodBind0,
-		&from, &to, collisionMask,
-		(godot_array)(exclude ?? new Array<Rid>()).NativeValue
-	);
+    // Yes, this goes through all of the same machinery discussed above.
+    return (PhysicsRayQueryParameters2D)NativeCalls.godot_icall_4_731(
+        MethodBind0,
+        &from, &to, collisionMask,
+        (godot_array)(exclude ?? new Array<Rid>()).NativeValue
+    );
 }
 ```
 
@@ -215,46 +215,46 @@ Let's jump straight into the C++ implementation here.
 
 ```c++
 Dictionary PhysicsDirectSpaceState2D::_intersect_ray(const Ref<PhysicsRayQueryParameters2D> &p_ray_query) {
-	ERR_FAIL_COND_V(!p_ray_query.is_valid(), Dictionary());
+    ERR_FAIL_COND_V(!p_ray_query.is_valid(), Dictionary());
 
-	RayResult result;
-	bool res = intersect_ray(p_ray_query->get_parameters(), result);
+    RayResult result;
+    bool res = intersect_ray(p_ray_query->get_parameters(), result);
 
-	if (!res) {
-		return Dictionary();
-	}
+    if (!res) {
+        return Dictionary();
+    }
 
-	Dictionary d;
-	d["position"] = result.position;
-	d["normal"] = result.normal;
-	d["collider_id"] = result.collider_id;
-	d["collider"] = result.collider;
-	d["shape"] = result.shape;
-	d["rid"] = result.rid;
+    Dictionary d;
+    d["position"] = result.position;
+    d["normal"] = result.normal;
+    d["collider_id"] = result.collider_id;
+    d["collider"] = result.collider;
+    d["shape"] = result.shape;
+    d["rid"] = result.rid;
 
-	return d;
+    return d;
 }
 
 // This is the params struct that the inernal intersect_ray takes in.
 // Nothing too crazy here (although exclude could probably be improved).
 struct RayParameters {
-	Vector2 from;
-	Vector2 to;
-	HashSet<RID> exclude;
-	uint32_t collision_mask = UINT32_MAX;
-	bool collide_with_bodies = true;
-	bool collide_with_areas = false;
-	bool hit_from_inside = false;
+    Vector2 from;
+    Vector2 to;
+    HashSet<RID> exclude;
+    uint32_t collision_mask = UINT32_MAX;
+    bool collide_with_bodies = true;
+    bool collide_with_areas = false;
+    bool hit_from_inside = false;
 };
 
 // And this is the output. A perfectly reasonable return value for a raycast.
 struct RayResult {
-	Vector2 position;
-	Vector2 normal;
-	RID rid;
-	ObjectID collider_id;
-	Object *collider = nullptr;
-	int shape = 0;
+    Vector2 position;
+    Vector2 normal;
+    RID rid;
+    ObjectID collider_id;
+    Object *collider = nullptr;
+    int shape = 0;
 };
 ```
 
@@ -274,31 +274,31 @@ Okay, let's go back to C# and see what happens when we return this thing.
 // The function we're calling.
 public Dictionary IntersectRay(PhysicsRayQueryParameters2D parameters)
 {
-	return NativeCalls.godot_icall_1_729(MethodBind1, GodotObject.GetPtr(this), GodotObject.GetPtr(parameters));
+    return NativeCalls.godot_icall_1_729(MethodBind1, GodotObject.GetPtr(this), GodotObject.GetPtr(parameters));
 }
 
 internal unsafe static Dictionary godot_icall_1_729(IntPtr method, IntPtr ptr, IntPtr arg1)
 {
-	godot_dictionary nativeValueToOwn = default(godot_dictionary);
-	if (ptr == IntPtr.Zero) throw new ArgumentNullException("ptr");
+    godot_dictionary nativeValueToOwn = default(godot_dictionary);
+    if (ptr == IntPtr.Zero) throw new ArgumentNullException("ptr");
 
-	void** intPtr = stackalloc void*[1];
-	*intPtr = &arg1;
-	void** p_args = intPtr;
-	NativeFuncs.godotsharp_method_bind_ptrcall(method, ptr, p_args, &nativeValueToOwn);
-	return Dictionary.CreateTakingOwnershipOfDisposableValue(nativeValueToOwn);
+    void** intPtr = stackalloc void*[1];
+    *intPtr = &arg1;
+    void** p_args = intPtr;
+    NativeFuncs.godotsharp_method_bind_ptrcall(method, ptr, p_args, &nativeValueToOwn);
+    return Dictionary.CreateTakingOwnershipOfDisposableValue(nativeValueToOwn);
 }
 
 internal static Dictionary CreateTakingOwnershipOfDisposableValue(godot_dictionary nativeValueToOwn)
 {
-	return new Dictionary(nativeValueToOwn);
+    return new Dictionary(nativeValueToOwn);
 }
 
 private Dictionary(godot_dictionary nativeValueToOwn)
 {
-	godot_dictionary value = (nativeValueToOwn.IsAllocated ? nativeValueToOwn : NativeFuncs.godotsharp_dictionary_new());
-	NativeValue = (godot_dictionary.movable)value;
-	_weakReferenceToSelf = DisposablesTracker.RegisterDisposable(this);
+    godot_dictionary value = (nativeValueToOwn.IsAllocated ? nativeValueToOwn : NativeFuncs.godotsharp_dictionary_new());
+    NativeValue = (godot_dictionary.movable)value;
+    _weakReferenceToSelf = DisposablesTracker.RegisterDisposable(this);
 }
 ```
 
@@ -309,15 +309,15 @@ Okay, so what next?
 ```csharp
 if (hitDictionary.Count != 0)
 {
-	// The cast from string to Variant can be implicit - I've made it explicit here for clarity
-	Variant hitPositionVariant = hitDictionary[(Variant)"position"];
-	Vector2 hitPosition = (Vector2)hitPositionVariant;
-	Variant hitNormalVariant = hitDictionary[(Variant)"normal"];
-	Vector2 hitNormal = (Vector2)hitNormalVariant;
-	
-	distance = (hitPosition - origin).Length();
-	normal = hitNormal;
-	return true;
+    // The cast from string to Variant can be implicit - I've made it explicit here for clarity
+    Variant hitPositionVariant = hitDictionary[(Variant)"position"];
+    Vector2 hitPosition = (Vector2)hitPositionVariant;
+    Variant hitNormalVariant = hitDictionary[(Variant)"normal"];
+    Vector2 hitNormal = (Vector2)hitNormalVariant;
+    
+    distance = (hitPosition - origin).Length();
+    normal = hitNormal;
+    return true;
 }
 ```
 
@@ -343,34 +343,34 @@ If you can remember as far back as `PhysicsRayQueryParameters2D`, we had the opp
 ```csharp
 readonly struct CachingRayCaster
 {
-	private readonly PhysicsDirectSpaceState2D spaceState;
-	private readonly PhysicsRayQueryParameters2D queryParams;
+    private readonly PhysicsDirectSpaceState2D spaceState;
+    private readonly PhysicsRayQueryParameters2D queryParams;
 
-	public CachingRayCaster(PhysicsDirectSpaceState2D spaceState)
-	{
-		this.spaceState = spaceState;
-		this.queryParams = PhysicsRayQueryParameters2D.Create(Vector2.Zero, Vector2.Zero);
-	}
+    public CachingRayCaster(PhysicsDirectSpaceState2D spaceState)
+    {
+        this.spaceState = spaceState;
+        this.queryParams = PhysicsRayQueryParameters2D.Create(Vector2.Zero, Vector2.Zero);
+    }
 
-	public bool GetDistanceAndNormal(Vector2 origin, Vector2 direction, out float distance, out Vector2 normal)
-	{
-		Godot.Collections.Dictionary hitDictionary = this.spaceState.IntersectRay(this.queryParams);
+    public bool GetDistanceAndNormal(Vector2 origin, Vector2 direction, out float distance, out Vector2 normal)
+    {
+        Godot.Collections.Dictionary hitDictionary = this.spaceState.IntersectRay(this.queryParams);
 
-		if (hitDictionary.Count != 0)
-		{
-			Variant hitPositionVariant = hitDictionary[(Variant)"position"];
-			Vector2 hitPosition = (Vector2)hitPositionVariant;
-			Variant hitNormalVariant = hitDictionary[(Variant)"normal"];
-			Vector2 hitNormal = (Vector2)hitNormalVariant;
-			distance = (hitPosition - origin).Length();
-			normal = hitNormal;
-			return true;
-		}
+        if (hitDictionary.Count != 0)
+        {
+            Variant hitPositionVariant = hitDictionary[(Variant)"position"];
+            Vector2 hitPosition = (Vector2)hitPositionVariant;
+            Variant hitNormalVariant = hitDictionary[(Variant)"normal"];
+            Vector2 hitNormal = (Vector2)hitNormalVariant;
+            distance = (hitPosition - origin).Length();
+            normal = hitNormal;
+            return true;
+        }
 
-		distance = default;
-		normal = default;
-		return false;
-	}
+        distance = default;
+        normal = default;
+        return false;
+    }
 }
 ```
 
@@ -389,13 +389,13 @@ But wait! We can take a whole different approach.
 ```csharp
 bool GetRaycastDistanceAndNormalWithNode(RayCast2D raycastNode, Vector2 origin, Vector2 direction, out float distance, out Vector2 normal)
 {
-	raycastNode.Position = origin;
-	raycastNode.TargetPosition = origin + direction;
-	raycastNode.ForceRaycastUpdate();
+    raycastNode.Position = origin;
+    raycastNode.TargetPosition = origin + direction;
+    raycastNode.ForceRaycastUpdate();
 
-	distance = (raycastNode.GetCollisionPoint() - origin).Length();
-	normal = raycastNode.GetCollisionNormal();
-	return raycastNode.IsColliding();
+    distance = (raycastNode.GetCollisionPoint() - origin).Length();
+    normal = raycastNode.GetCollisionNormal();
+    return raycastNode.IsColliding();
 }
 ```
 
@@ -406,23 +406,23 @@ First we need to note that, as we've come to expect, each of these properties th
 ```csharp
 public Vector2 Position
 {
-	get => GetPosition()
-	set => SetPosition(value);
+    get => GetPosition()
+    set => SetPosition(value);
 }
 
 internal unsafe void SetPosition(Vector2 position)
 {
-	NativeCalls.godot_icall_1_31(MethodBind0, GodotObject.GetPtr(this), &position);
+    NativeCalls.godot_icall_1_31(MethodBind0, GodotObject.GetPtr(this), &position);
 }
 
 internal unsafe static void godot_icall_1_31(IntPtr method, IntPtr ptr, Vector2* arg1)
 {
-	if (ptr == IntPtr.Zero) throw new ArgumentNullException("ptr");
+    if (ptr == IntPtr.Zero) throw new ArgumentNullException("ptr");
 
-	void** intPtr = stackalloc void*[1];
-	*intPtr = arg1;
-	void** p_args = intPtr;
-	NativeFuncs.godotsharp_method_bind_ptrcall(method, ptr, p_args, null);
+    void** intPtr = stackalloc void*[1];
+    *intPtr = arg1;
+    void** p_args = intPtr;
+    NativeFuncs.godotsharp_method_bind_ptrcall(method, ptr, p_args, null);
 }
 ```
 
@@ -430,52 +430,52 @@ Now let's look at what `ForceRaycastUpdate()` actually does. I'm sure you can gu
 
 ```c++
 void RayCast2D::force_raycast_update() {
-	_update_raycast_state();
+    _update_raycast_state();
 }
 
 void RayCast2D::_update_raycast_state() {
-	Ref<World2D> w2d = get_world_2d();
-	ERR_FAIL_COND(w2d.is_null());
+    Ref<World2D> w2d = get_world_2d();
+    ERR_FAIL_COND(w2d.is_null());
 
-	PhysicsDirectSpaceState2D *dss = PhysicsServer2D::get_singleton()->space_get_direct_state(w2d->get_space());
-	ERR_FAIL_NULL(dss);
+    PhysicsDirectSpaceState2D *dss = PhysicsServer2D::get_singleton()->space_get_direct_state(w2d->get_space());
+    ERR_FAIL_NULL(dss);
 
-	Transform2D gt = get_global_transform();
+    Transform2D gt = get_global_transform();
 
-	Vector2 to = target_position;
-	if (to == Vector2()) {
-		to = Vector2(0, 0.01);
-	}
+    Vector2 to = target_position;
+    if (to == Vector2()) {
+        to = Vector2(0, 0.01);
+    }
 
-	PhysicsDirectSpaceState2D::RayResult rr;
-	bool prev_collision_state = collided;
+    PhysicsDirectSpaceState2D::RayResult rr;
+    bool prev_collision_state = collided;
 
-	PhysicsDirectSpaceState2D::RayParameters ray_params;
-	ray_params.from = gt.get_origin();
-	ray_params.to = gt.xform(to);
-	ray_params.exclude = exclude;
-	ray_params.collision_mask = collision_mask;
-	ray_params.collide_with_bodies = collide_with_bodies;
-	ray_params.collide_with_areas = collide_with_areas;
-	ray_params.hit_from_inside = hit_from_inside;
+    PhysicsDirectSpaceState2D::RayParameters ray_params;
+    ray_params.from = gt.get_origin();
+    ray_params.to = gt.xform(to);
+    ray_params.exclude = exclude;
+    ray_params.collision_mask = collision_mask;
+    ray_params.collide_with_bodies = collide_with_bodies;
+    ray_params.collide_with_areas = collide_with_areas;
+    ray_params.hit_from_inside = hit_from_inside;
 
-	if (dss->intersect_ray(ray_params, rr)) {
-		collided = true;
-		against = rr.collider_id;
-		against_rid = rr.rid;
-		collision_point = rr.position;
-		collision_normal = rr.normal;
-		against_shape = rr.shape;
-	} else {
-		collided = false;
-		against = ObjectID();
-		against_rid = RID();
-		against_shape = 0;
-	}
+    if (dss->intersect_ray(ray_params, rr)) {
+        collided = true;
+        against = rr.collider_id;
+        against_rid = rr.rid;
+        collision_point = rr.position;
+        collision_normal = rr.normal;
+        against_shape = rr.shape;
+    } else {
+        collided = false;
+        against = ObjectID();
+        against_rid = RID();
+        against_shape = 0;
+    }
 
-	if (prev_collision_state != collided) {
-		queue_redraw();
-	}
+    if (prev_collision_state != collided) {
+        queue_redraw();
+    }
 }
 ```
 
@@ -532,12 +532,12 @@ If we look at how Godot's C++ core exposes its API we'll see something interesti
 
 ```c++
 void PhysicsDirectSpaceState3D::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("intersect_point", "parameters", "max_results"), &PhysicsDirectSpaceState3D::_intersect_point, DEFVAL(32));
-	ClassDB::bind_method(D_METHOD("intersect_ray", "parameters"), &PhysicsDirectSpaceState3D::_intersect_ray);
-	ClassDB::bind_method(D_METHOD("intersect_shape", "parameters", "max_results"), &PhysicsDirectSpaceState3D::_intersect_shape, DEFVAL(32));
-	ClassDB::bind_method(D_METHOD("cast_motion", "parameters"), &PhysicsDirectSpaceState3D::_cast_motion);
-	ClassDB::bind_method(D_METHOD("collide_shape", "parameters", "max_results"), &PhysicsDirectSpaceState3D::_collide_shape, DEFVAL(32));
-	ClassDB::bind_method(D_METHOD("get_rest_info", "parameters"), &PhysicsDirectSpaceState3D::_get_rest_info);
+    ClassDB::bind_method(D_METHOD("intersect_point", "parameters", "max_results"), &PhysicsDirectSpaceState3D::_intersect_point, DEFVAL(32));
+    ClassDB::bind_method(D_METHOD("intersect_ray", "parameters"), &PhysicsDirectSpaceState3D::_intersect_ray);
+    ClassDB::bind_method(D_METHOD("intersect_shape", "parameters", "max_results"), &PhysicsDirectSpaceState3D::_intersect_shape, DEFVAL(32));
+    ClassDB::bind_method(D_METHOD("cast_motion", "parameters"), &PhysicsDirectSpaceState3D::_cast_motion);
+    ClassDB::bind_method(D_METHOD("collide_shape", "parameters", "max_results"), &PhysicsDirectSpaceState3D::_collide_shape, DEFVAL(32));
+    ClassDB::bind_method(D_METHOD("get_rest_info", "parameters"), &PhysicsDirectSpaceState3D::_get_rest_info);
 }
 ```
 
