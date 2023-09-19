@@ -3,11 +3,8 @@ layout: post
 title: "Godot is not the new Unity - The anatomy of a Godot API call"
 ---
 
----
-
 *UPDATE: This article has started an ongoing conversation with the Godot devs. They care about the issues raised, and would like to improve things. Significant improvements will almost certainly be made, although it's still early days and it's unclear what will change and by how much. I am encouraged by the response. I believe Godot's future could be very bright indeed.*
 
----
 
 Like many people, I've spent the last few days looking for the new Unity. Godot has some potential, especially if it can take advantage of an influx of dev talent to drive rapid improvement. Open source is cool like that. However, one major issue holds it back - the binding layer between engine code and gameplay code is structurally built to be slow in ways which are very hard to fix without tearing everything down and rebuilding the entire API from scratch.
 
