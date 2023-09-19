@@ -586,9 +586,7 @@ If Godot wants to be able to capture the general Unity market (I don't actually 
 
 
 ## Discussion
-I [posted this article on the r/Godot subreddit](https://old.reddit.com/r/godot/comments/16lti15/godot_is_not_the_new_unity_the_anatomy_of_a_godot/) and there's quite an active discussion there. If you've arrived here from somewhere else and would like to give feedback or be pseudonymously rude to me on the internet, that's the place to do it.
-
-There's also a [discussion happening on Hacker News](https://news.ycombinator.com/item?id=37561762).
+I [posted this article on the r/Godot subreddit](https://old.reddit.com/r/godot/comments/16lti15/godot_is_not_the_new_unity_the_anatomy_of_a_godot/) and there's quite an active discussion there. If you've arrived here from somewhere else and would like to give feedback or be pseudonymously rude to me on the internet, that's the place to do it. 
 
 
 ## Acknowledgements
