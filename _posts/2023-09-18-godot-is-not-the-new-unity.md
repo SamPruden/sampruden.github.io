@@ -353,6 +353,8 @@ readonly struct CachingRayCaster
 
     public bool GetDistanceAndNormal(Vector2 origin, Vector2 direction, out float distance, out Vector2 normal)
     {
+        this.queryParams.From = origin;
+        this.queryParams.To = origin + direction;
         Godot.Collections.Dictionary hitDictionary = this.spaceState.IntersectRay(this.queryParams);
 
         if (hitDictionary.Count != 0)
